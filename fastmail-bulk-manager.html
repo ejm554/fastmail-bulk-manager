@@ -266,6 +266,10 @@
         <details style="margin-top: 15px;">
             <summary style="cursor: pointer; font-weight: 500;">📋 Feature Roadmap</summary>
             <div style="margin-top: 10px; padding-left: 20px; font-size: 14px; color: #666;">
+                <h4>Near-term Priority:</h4>
+                <ul>
+                    <li><strong>Preview/Dry Run Mode:</strong> Toggle to disable all changes and show detailed previews - builds confidence for safe testing ✅</li>
+                </ul>
                 <h4>Future Features Under Consideration:</h4>
                 <ul>
                     <li><strong>Sample Message Viewer:</strong> Preview one or more sample emails from a sender before taking action</li>
@@ -560,28 +564,6 @@
                 return Object.values(senderGroups).sort((a, b) => b.count - a.count);
             }
 
-            async makeJMAPCall(requests) {
-                const response = await fetch(this.baseUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': document.getElementById('password').value ? 
-                            `Basic ${btoa(document.getElementById('username').value + ':' + document.getElementById('password').value)}` : ''
-                    },
-                    body: JSON.stringify({
-                        using: ['urn:ietf:params:jmap:core', 'urn:ietf:params:jmap:mail'],
-                        methodCalls: requests
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`JMAP call failed: ${response.status}`);
-                }
-
-                const data = await response.json();
-                return data.methodResponses;
-            }
-
             async moveMessagesFromSender(senderEmail) {
                 try {
                     // First, find all messages from this sender NOT in bulk folder
@@ -732,6 +714,28 @@ if address :is "from" "${senderEmail}" {
                     return { success: false, error: error.message };
                 }
             }
+
+            async makeJMAPCall(requests) {
+                const response = await fetch(this.baseUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': document.getElementById('password').value ? 
+                            `Basic ${btoa(document.getElementById('username').value + ':' + document.getElementById('password').value)}` : ''
+                    },
+                    body: JSON.stringify({
+                        using: ['urn:ietf:params:jmap:core', 'urn:ietf:params:jmap:mail'],
+                        methodCalls: requests
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`JMAP call failed: ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data.methodResponses;
+            }
         }
 
         // Initialize the manager and register with toolkit
@@ -816,9 +820,6 @@ if address :is "from" "${senderEmail}" {
                         <button class="action-button" onclick="showMoveConfirmation('${sender.email}', '${sender.name}')">
                             Move All From This Sender
                         </button>
-                        <button class="action-button secondary" onclick="showRuleConfirmation('${sender.email}', '${sender.name}')">
-                            Create Auto-Rule
-                        </button>
                         <button class="action-button secondary" onclick="viewMessages('${sender.email}')">
                             View Messages
                         </button>
@@ -881,8 +882,16 @@ if address :is "from" "${senderEmail}" {
                 } else if (pendingAction.type === 'rule') {
                     await executeRule(pendingAction.email);
                 } else if (pendingAction.type === 'bulk_move') {
+                    if (isPreviewMode) {
+                        showStatus(`Preview: Would move all messages from ${pendingAction.senders.length} selected senders to bulk folder`, 'info');
+                        return;
+                    }
                     await executeBulkMove(pendingAction.senders);
                 } else if (pendingAction.type === 'bulk_rule') {
+                    if (isPreviewMode) {
+                        showStatus(`Preview: Would create rules for ${pendingAction.senders.length} selected senders`, 'info');
+                        return;
+                    }
                     await executeBulkRule(pendingAction.senders);
                 }
             } finally {
@@ -1047,35 +1056,12 @@ if address :is "from" "${senderEmail}" {
             }
         }
 
-        async function moveAllFromSender(senderEmail) {
-            try {
-                const result = await manager.moveMessagesFromSender(senderEmail);
-                if (result.success) {
-                    alert(`Moved ${result.moved} messages from ${senderEmail} to bulk folder`);
-                } else {
-                    alert(`Error: ${result.error}`);
-                }
-            } catch (error) {
-                alert(`Error: ${error.message}`);
-            }
-        }
-
-        async function createRuleForSender(senderEmail) {
-            try {
-                const result = await manager.createRule(senderEmail);
-                if (result.success) {
-                    alert(`Created rule to automatically move messages from ${senderEmail} to bulk`);
-                } else {
-                    alert(`Error: ${result.error}`);
-                }
-            } catch (error) {
-                alert(`Error: ${error.message}`);
-            }
-        }
-
         function viewMessages(senderEmail) {
             alert(`Would show detailed message list for ${senderEmail}`);
         }
     </script>
 </body>
-</html>
+</html>" onclick="showRuleConfirmation('${sender.email}', '${sender.name}')">
+                            Create Auto-Rule
+                        </button>
+                        <button class="action-button secondary
