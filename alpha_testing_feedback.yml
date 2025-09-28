@@ -1,0 +1,81 @@
+title: Alpha Testing Feedback
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for testing the Fastmail Bulk Manager! Your feedback helps make the tool better for everyone.
+
+  - type: checkboxes
+    id: account-type
+    attributes:
+      label: What did you test?
+      description: Account type
+      options:
+        - label: Used Fastmail trial account
+        - label: Used my real Fastmail account (with backup)
+
+  - type: checkboxes
+    id: actions-taken
+    attributes:
+      label: What actions did you take?
+      options:
+        - label: Preview mode only
+        - label: Actually moved messages/created rules
+
+  - type: textarea
+    id: overall-experience
+    attributes:
+      label: How did it go overall?
+      description: Tell us your general experience - was it confusing, helpful, buggy, etc.
+      placeholder: "Example: It was mostly smooth, but I got confused about..."
+
+  - type: textarea
+    id: what-worked
+    attributes:
+      label: What worked well?
+      description: Anything that impressed you or worked smoothly
+      placeholder: "Example: The preview mode was great because..."
+
+  - type: textarea
+    id: problems
+    attributes:
+      label: What was confusing or didn't work?
+      description: Problems, errors, or things that were unclear
+      placeholder: "Example: I couldn't figure out how to..."
+
+- type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots - Please share what you see!
+      description: |
+        Screenshots help us understand exactly what happened. Don't worry if you're not tech-savvy - it's really easy:
+        
+        **How to take screenshots:**
+        - **On PC:** Press Print Screen key, then click here and press Ctrl+V
+        - **On Mac:** Press Cmd+Shift+4, then click here and press Cmd+V
+        
+        **When to take screenshots:**
+        - When something goes wrong or looks broken
+        - When you're confused about what to do next
+        - When you see any error messages
+        - If something works great and you want to show us!
+        
+        **Don't have screenshots?** No problem! Just describe what you saw in words.
+      placeholder: "Drag screenshots here or paste with Ctrl+V (PC) or Cmd+V (Mac)"
+
+  - type: dropdown
+    id: recommend
+    attributes:
+      label: Would you recommend this tool to other Fastmail users?
+      options:
+        - "Yes, definitely"
+        - "Yes, with improvements"
+        - "Not yet"
+        - "No"
+
+  - type: textarea
+    id: other-thoughts
+    attributes:
+      label: Any other thoughts?
+      description: Anything else you want to tell us
+      placeholder: "Additional feedback, suggestions, or comments..."
