@@ -313,6 +313,12 @@
                 </select>
             </div>
             <button type="submit" class="action-button">Connect & Scan</button>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="previewMode" checked> 
+                    Preview mode (show what would happen without making changes)
+                </label>
+            </div>
         </form>
         <div id="connectionStatus"></div>
     </div>
@@ -730,6 +736,7 @@ if address :is "from" "${senderEmail}" {
 
         // Initialize the manager and register with toolkit
         const manager = new FastmailBulkManager();
+        let isPreviewMode = false;
         window.FastmailToolkit.registerTool('bulkManager', manager);
         
         // Handle form submission
@@ -741,6 +748,7 @@ if address :is "from" "${senderEmail}" {
             const password = document.getElementById('password').value;
             const bulkFolder = document.getElementById('bulkFolder').value;
             const daysPast = parseInt(document.getElementById('daysPast').value);
+            isPreviewMode = document.getElementById('previewMode').checked;
             
             const statusDiv = document.getElementById('connectionStatus');
             statusDiv.innerHTML = '<div class="status info">Connecting...</div>';
@@ -886,6 +894,10 @@ if address :is "from" "${senderEmail}" {
 
         async function executeMove(senderEmail) {
             try {
+                if (isPreviewMode) {
+                    showStatus(`Preview: Would move all messages from ${senderEmail} to bulk folder`, 'info');
+                    return;
+                }
                 const result = await manager.moveMessagesFromSender(senderEmail);
                 if (result.success) {
                     const message = result.message || `Moved ${result.moved} messages from ${senderEmail} to bulk folder`;
@@ -904,6 +916,10 @@ if address :is "from" "${senderEmail}" {
 
         async function executeRule(senderEmail) {
             try {
+                if (isPreviewMode) {
+                    showStatus(`Preview: Would create rule to automatically move messages from ${senderEmail} to bulk`, 'info');
+                    return;
+                }
                 const result = await manager.createRule(senderEmail);
                 if (result.success) {
                     const message = result.message || `Created rule to automatically move messages from ${senderEmail} to bulk`;
