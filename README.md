@@ -1,13 +1,14 @@
 # Fastmail Bulk Manager
 
 > [!CAUTION]
-> This software is in active development.
-> Changes may occur without warning, and documentation is not guaranteed to be up-to-date.
-> Always test safely with a Fastmail trial account, or create backups if using an existing account.
+> **This software is in active development.** 
+> Changes may occur without warning, and documentation is not guaranteed to be up-to-date Always test safely with a Fastmail trial account, or create backups if using an existing account.
 
 ## About
 
-A web-based tool for efficiently managing subscription-based email in Fastmail. Begin by creating a Subscriptions folder. As you manually move new email messages from your Inbox to the Subscriptions folder, you can use the tool later to intelligently offer the option to move all older messages from specific senders and/or you can use it to create rules to move future messages.
+A web-based tool for efficiently managing subscription-based email in Fastmail. 
+
+Begin by creating a Subscriptions folder. As you manually move new email messages from your Inbox to this Subscriptions folder, you can use the tool later to intelligently offer you the option to move all older messages from specific senders and/or you can use it to create rules to move future messages.
 
 **Cross-Device Integration**: Detects messages moved to Subscriptions from any device, regardless of whether you used the official Fastmail apps for iPhone or Android, the web interface, or any email client that connects to Fastmail via IMAP/JMAP.
 
@@ -75,11 +76,9 @@ A web-based tool for efficiently managing subscription-based email in Fastmail. 
 
 ## Status & Disclaimers
 
-**Alpha Version 0.1.0** - This is early-stage software:
-- Test safely with a Fastmail trial account, or create backups if using your existing account
-- Test with non-critical emails first  
-- Some features may not work with all account types
-- Use at your own risk
+> [!CAUTION]
+> **This software is in active development.** 
+> Changes may occur without warning, and documentation is not guaranteed to be up-to-date Always test safely with a Fastmail trial account, or create backups if using an existing account.
 
 **Not affiliated with Fastmail** - This is an independent community tool.
 
@@ -87,6 +86,3 @@ A web-based tool for efficiently managing subscription-based email in Fastmail. 
 
 MIT License - See [LICENSE](LICENSE) file for details.
 
----
-
-*Ready to reclaim control of your email? [Get started](BACKUP.md) with a backup, then dive in!*
