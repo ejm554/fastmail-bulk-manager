@@ -46,18 +46,12 @@ Begin by creating a Subscriptions folder. As you manually move new email message
 
 ## Roadmap
 
-### Planned Features
-- **Sample Message Viewer**: Preview emails from a sender before taking action
-- **Smart Rule Cleanup**: Detect unsubscribe actions and offer to remove related auto-rules
-- **Reverse Actions**: Detect when messages are removed from Subscriptions and offer corresponding actions
-- **Message Search**: Find specific messages across senders and time periods
-- **Rule Management Interface**: View, edit, and delete existing filter rules
+See [ROADMAP.md](ROADMAP.md) for detailed feature plans and development priorities.
 
-### Long-term Vision
-- **Open Source Community**: Move development to collaborative GitHub workflow ✅
-- **Browser Extension API**: Enable hybrid browser extension integration
-- **Fastmail Tool Suite**: Create complementary tools with shared design and authentication
-- **Advanced Filtering**: More sophisticated rule creation and management
+**Near-term focus:**
+- Multi-folder support (Project folders, Newsletters, etc. simultaneously)
+- Enhanced user experience and safety features
+- Community-driven feature development
 
 ## Technical Details
 
