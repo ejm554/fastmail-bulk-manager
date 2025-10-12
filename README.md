@@ -1,36 +1,41 @@
 # Fastmail Bulk Manager
 
-⚠️ **ALPHA SOFTWARE** - Test safely with a Fastmail trial account, or create backups if using your existing account.
+> [!CAUTION]
+> This software is in active development.
+> Changes may occur without warning, and documentation is not guaranteed to be up-to-date.
+> Always test safely with a Fastmail trial account, or create backups if using an existing account.
 
-A web-based tool for efficiently managing bulk email in Fastmail. Review messages you've moved to your bulk folder and take batch actions like moving all messages from specific senders or creating automatic filter rules.
+## About
 
-**Cross-Device Integration**: Detects messages moved to bulk from any device - whether you used the Fastmail iPhone app, Android app, web interface, or any email client.
+A web-based tool for efficiently managing subscription-based email in Fastmail. Begin by creating a Subscriptions folder. As you manually move new email messages from your Inbox to the Subscriptions folder, you can use the tool later to intelligently offer the option to move all older messages from specific senders and/or you can use it to create rules to move future messages.
+
+**Cross-Device Integration**: Detects messages moved to Subscriptions from any device, regardless of whether you used the official Fastmail apps for iPhone or Android, the web interface, or any email client that connects to fastmail via IMAP/JMAP.
 
 ## Quick Start
 
 1. **Test safely**: Use a [Fastmail trial account](https://app.fastmail.com/signup/) or [create backups](BACKUP.md) of your existing account
-2. Download `fastmail-bulk-manager.html` from this repository
+2. Download the HTML file from this repository 
 3. Open the file in any modern web browser
 4. Generate an App Password in Fastmail (Settings → Privacy & Security → App Passwords)
-5. Connect and start managing your bulk email efficiently
+5. Connect and start managing your Subscriptions email efficiently
 
 ## Key Features
 
-- **Periodic Review Interface**: Scan bulk folder and group recent messages by sender
+- **Periodic Review Interface**: Scan Subscriptions folder and group recent messages by sender
 - **Safety First**: All actions require explicit confirmation dialogs
 - **Bulk Operations**: Select multiple senders for batch processing
-- **Message Moving**: Move all non-bulk messages from selected senders to bulk folder
+- **Message Moving**: Move all Inbox messages from selected senders to Subscriptions folder
 - **Auto-Rule Creation**: Generate Sieve filter rules for automatic future filtering
 - **Universal Compatibility**: Works on any modern browser across all operating systems
 
 ## How It Works
 
-1. **Mobile Workflow**: Use Fastmail's mobile apps to quickly bulk unwanted emails throughout the day
+1. **Mobile Workflow**: Use Fastmail's mobile apps to manually move unwanted emails throughout the day from Inbox to Subscriptions folder
 2. **Desktop Review**: Run this tool periodically to batch-process all those senders
-3. **Smart Actions**: Move remaining messages and/or create auto-rules for future emails
-4. **Cross-Platform**: Detects bulk moves from any device via direct JMAP connection
+3. **Smart Actions**: Use tool to move any remaining messages in Inbox and/or create rules for future emails
+4. **Cross-Platform**: Detects moves from any device or email client via direct JMAP connection
 
-**Example Workflow**: Bulk emails on your phone during commutes, then run weekly cleanup sessions on your laptop to batch-process all those senders and create auto-rules.
+**Example Workflow**: Move emails on your phone during commutes, then run weekly cleanup sessions on your laptop to batch-process all those senders and create rules.
 
 ## Documentation
 
@@ -43,7 +48,7 @@ A web-based tool for efficiently managing bulk email in Fastmail. Review message
 ### Planned Features
 - **Sample Message Viewer**: Preview emails from a sender before taking action
 - **Smart Rule Cleanup**: Detect unsubscribe actions and offer to remove related auto-rules
-- **Reverse Actions**: Detect when messages are removed from Bulk and offer corresponding actions
+- **Reverse Actions**: Detect when messages are removed from Subscriptions and offer corresponding actions
 - **Message Search**: Find specific messages across senders and time periods
 - **Rule Management Interface**: View, edit, and delete existing filter rules
 
