@@ -9,7 +9,7 @@
 
 A web-based tool for efficiently managing subscription-based email in Fastmail. Begin by creating a Subscriptions folder. As you manually move new email messages from your Inbox to the Subscriptions folder, you can use the tool later to intelligently offer the option to move all older messages from specific senders and/or you can use it to create rules to move future messages.
 
-**Cross-Device Integration**: Detects messages moved to Subscriptions from any device, regardless of whether you used the official Fastmail apps for iPhone or Android, the web interface, or any email client that connects to fastmail via IMAP/JMAP.
+**Cross-Device Integration**: Detects messages moved to Subscriptions from any device, regardless of whether you used the official Fastmail apps for iPhone or Android, the web interface, or any email client that connects to Fastmail via IMAP/JMAP.
 
 ## Quick Start
 
