@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fastmail Subscriptions Manager</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!--
+    ========================================================================
+    ALPHA SOFTWARE NOTICE
+    ========================================================================
+    
+    Test safely with a Fastmail trial account, or create backups if using 
+    your existing account.
+    
+    This tool is in early development and may contain bugs. Not recommended 
+    for production use with important data.
+    ========================================================================
+    
+    EDUCATIONAL CODEBASE NOTICE
+    ========================================================================
+    
+    This project includes extensive educational comments throughout the code
+    to help people learn web development, JavaScript, and email APIs.
+    
+    These comments explain:
+    • What each section of code does
+    • Why certain approaches were chosen
+    • How underlying technologies work
+    • Best practices and common patterns
+    
+    CONTRIBUTORS: You can help maintain this educational value by:
+    ✅ Preserving existing educational comments when making changes
+    ✅ Updating comments when functionality changes to keep them accurate
+    💡 Optionally adding explanatory comments for new code (welcomed but not required!)
+    💡 Improving existing explanations if you spot unclear or outdated info
+    
+    All contributions are welcome regardless of commenting style - clear code
+    and good pull request descriptions help the community understand changes.
+    
+    Thank you for helping maintain this project's educational mission!
+    ========================================================================
+    -->
+ 
+    <!-- Temp Note (EJM, 2025-10-11):
+    CSS used to be here in between <style> & </style> tags. They were moved to a file named styles.css.
+    --> 
+
+</head>
+<body>
+    <div class="header">
+
+
+        <h1>Fastmail Subscriptions Manager</h1>
+        <p>Review and manage messages you've moved to subscription folders</p>
+        
+        <details style="margin-top: 15px;">
+            <summary style="cursor: pointer; font-weight: 500;">📋 Feature Roadmap</summary>
+            <div style="margin-top: 10px; padding-left: 20px; font-size: 14px; color: #666;">
+                <h4>Near-term Priority:</h4>
+                <ul>
+                    <li><strong>Preview/Dry Run Mode:</strong> Toggle to disable all changes and show detailed previews - builds confidence for safe testing ✅</li>
+                </ul>
+                <h4>Future Features Under Consideration:</h4>
+                <ul>
+                    <li><strong>Sample Message Viewer:</strong> Preview one or more sample emails from a sender before taking action</li>
+                    <li><strong>Smart Rule Cleanup:</strong> Detect unsubscribe actions and offer to remove related auto-rules to keep things tidy</li>
+                    <li><strong>Reverse Actions:</strong> Detect when messages are removed from Subscriptions and ask about moving all messages from that sender and/or modifying rules</li>
+                    <li><strong>Open Source:</strong> Add this project to GitHub for community contributions and improvements</li>
+                    <li><strong>Browser Extension API:</strong> Simple API to enable hybrid browser extension integration</li>
+                    <li><strong>Fastmail Tool Suite:</strong> Create other complementary Fastmail tools with similar design that can work together</li>
+                    <li><strong>Message Search:</strong> Find specific messages across senders and time periods</li>
+                    <li><strong>Rule Management:</strong> View, edit, and delete existing filter rules</li>
+                    <li><strong>Statistics Dashboard:</strong> Show trends of bulk message patterns over time</li>
+                </ul>
+            </div>
+        </details>
+    </div>
+
+    <div class="config-section">
+        <h2>Configuration</h2>
+        <form id="configForm">
+            <div class="form-group">
+                <label for="server">JMAP Server:</label>
+                <input type="text" id="server" value="https://jmap.fastmail.com/.well-known/jmap" readonly>
+            </div>
+            <div class="form-group">
+                <label for="username">Username (email):</label>
+                <input type="email" id="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">App Password:</label>
+                <input type="password" id="password" required>
+                <small>Generate an app password in Fastmail Settings → Privacy & Security → App Passwords</small>
+            </div>
+            <div class="form-group">
+
+
+                <label for="subscriptionsFolder">Subscriptions Folder Name:</label>
+                <input type="text" id="subscriptionsFolder" value="Subscriptions" placeholder="Enter folder name (e.g., Subscriptions, Newsletters, Updates)">
+            </div>
+            <div class="form-group">
+                <label for="daysPast">Review messages from past:</label>
+                <select id="daysPast">
+                    <option value="1">1 day</option>
+                    <option value="3">3 days</option>
+                    <option value="7" selected>7 days</option>
+                    <option value="14">14 days</option>
+                    <option value="30">30 days</option>
+                </select>
+            </div>
+            <button type="submit" class="action-button">Connect & Scan</button>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="previewMode" checked> 
+                    Preview mode (show what would happen without making changes)
+                </label>
+            </div>
+        </form>
+        <div id="connectionStatus"></div>
+    </div>
+
+    <div id="results" class="hidden">
+
+        <h2>Messages Moved to Subscriptions</h2>
+        <div class="form-group">
+            <button class="action-button secondary" onclick="selectAllSenders()">Select All</button>
+            <button class="action-button secondary" onclick="deselectAllSenders()">Deselect All</button>
+            <button class="action-button" onclick="bulkAction('move')" id="bulkMoveBtn" disabled>Move Selected</button>
+            <button class="action-button secondary" onclick="bulkAction('rule')" id="bulkRuleBtn" disabled>Create Rules for Selected</button>
+        </div>
+        <div id="sendersContainer">
+            <div class="loading">Scanning your messages...</div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Confirm Action</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalBody"></div>
+            <div class="modal-actions">
+                <button class="action-button secondary" onclick="closeModal()">Cancel</button>
+                <button class="action-button" id="confirmBtn" onclick="confirmAction()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Temp Note (EJM, 2025-10-11):
+    Javascript scripts used to be here in between <script> & </script> tags. They were moved into the following five files: actions.js, fastmail-api.js, main.js, toolkit.js, and ui.js.
+    --> 
+    
+    <script src="js/toolkit.js"></script>
+    <script src="js/fastmail-api.js"></script>
+    <script src="js/actions.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>" onclick="showRuleConfirmation('${sender.email}', '${sender.name}')">
+                            Create Auto-Rule
+                        </button>
+                        <button class="action-button secondary
