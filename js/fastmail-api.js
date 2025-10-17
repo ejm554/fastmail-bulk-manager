@@ -14,14 +14,15 @@ class FastmailBulkManager {
         this.accountId = null;    // User's account identifier
         this.bulkFolderId = null; // ID of the bulk/spam folder
         this.baseUrl = null;      // Base URL for JMAP API calls
+        this.apiToken = null;     // API token for Bearer authentication
     }
 
     /*
      * AUTHENTICATION METHOD
      * Async/await syntax for handling asynchronous operations
-     * This connects to Fastmail's JMAP API using app passwords
+     * This connects to Fastmail's JMAP API using Bearer token authentication
      */
-    async connect(server, username, password) {
+    async connect(server, apiToken) {
         try {
             /*
              * FETCH API
@@ -32,11 +33,11 @@ class FastmailBulkManager {
                 method: 'GET',
                 headers: {
                     /*
-                     * HTTP BASIC AUTHENTICATION
-                     * btoa() encodes username:password in Base64
-                     * This is how we authenticate with Fastmail's API
+                     * HTTP BEARER TOKEN AUTHENTICATION
+                     * Bearer tokens are the required authentication method for
+                     * Fastmail's CORS-enabled JMAP endpoint
                      */
-                    'Authorization': `Basic ${btoa(username + ':' + password)}`
+                    'Authorization': `Bearer ${apiToken}`
                 }
             });
 
@@ -52,6 +53,7 @@ class FastmailBulkManager {
              */
             this.session = await sessionResponse.json();
             this.baseUrl = this.session.apiUrl;
+            this.apiToken = apiToken; // Store for use in subsequent JMAP calls
             
             /*
              * OBJECT PROPERTY ACCESS
@@ -66,7 +68,7 @@ class FastmailBulkManager {
              * This supports the extensibility roadmap
              */
             window.FastmailToolkit.setSharedAuth({
-                server, username, password,
+                server, apiToken,
                 session: this.session,
                 baseUrl: this.baseUrl,
                 accountId: this.accountId
@@ -330,8 +332,7 @@ if address :is "from" "${senderEmail}" {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': document.getElementById('password').value ? 
-                    `Basic ${btoa(document.getElementById('username').value + ':' + document.getElementById('password').value)}` : ''
+                'Authorization': `Bearer ${this.apiToken}`
             },
             body: JSON.stringify({
                 using: ['urn:ietf:params:jmap:core', 'urn:ietf:params:jmap:mail'],

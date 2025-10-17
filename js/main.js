@@ -22,8 +22,7 @@ document.getElementById('configForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const server = document.getElementById('server').value;
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+    const apiToken = document.getElementById('apiToken').value;
     const subscriptionsFolder = document.getElementById('subscriptionsFolder').value;
     const daysPast = parseInt(document.getElementById('daysPast').value);
     isPreviewMode = document.getElementById('previewMode').checked;
@@ -33,7 +32,7 @@ document.getElementById('configForm').addEventListener('submit', async (e) => {
     
     try {
         // Connect to JMAP
-        const connectResult = await manager.connect(server, username, password);
+        const connectResult = await manager.connect(server, apiToken);
         if (!connectResult.success) {
             throw new Error(connectResult.error);
         }
