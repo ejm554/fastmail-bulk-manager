@@ -1,0 +1,10 @@
+{
+  "type": "module",
+  "scripts": {
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "vite": "^7.1.10",
+    "vite-plugin-singlefile": "^2.3.0"
+  }
+}
