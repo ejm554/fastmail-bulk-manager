@@ -1,4 +1,4 @@
-# Fastmail Bulk Manager
+# Fastmail Subscriptions Manager
 
 > [!CAUTION]
 > **This software is in active development.** 
