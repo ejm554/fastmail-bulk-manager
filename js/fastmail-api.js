@@ -347,3 +347,5 @@ if address :is "from" "${senderEmail}" {
         return data.methodResponses;
     }
 }
+
+export { FastmailBulkManager };

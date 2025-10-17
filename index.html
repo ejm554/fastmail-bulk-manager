@@ -136,13 +136,10 @@
     Javascript scripts used to be here in between <script> & </script> tags. They were moved into the following five files: actions.js, fastmail-api.js, main.js, toolkit.js, and ui.js.
     --> 
     
-    <script src="js/toolkit.js"></script>
-    <script src="js/fastmail-api.js"></script>
-    <script src="js/actions.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/main.js"></script>
+    <script type="module" src="js/toolkit.js"></script>
+    <script type="module" src="js/fastmail-api.js"></script>
+    <script type="module" src="js/actions.js"></script>
+    <script type="module" src="js/ui.js"></script>
+    <script type="module" src="js/main.js"></script>
 </body>
-</html>" onclick="showRuleConfirmation('${sender.email}', '${sender.name}')">
-                            Create Auto-Rule
-                        </button>
-                        <button class="action-button secondary
+</html>

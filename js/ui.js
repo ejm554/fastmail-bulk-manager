@@ -1,4 +1,11 @@
 /*
+ * ES MODULE IMPORTS
+ * This file needs functions from actions.js to execute user actions
+ * We import only what we need - JavaScript will load the rest automatically
+ */
+import { executeMove, executeRule, executeBulkMove } from './actions.js';
+
+/*
  * UI FUNCTIONS
  * Functions for displaying senders, showing modals, and handling user interface
  */
@@ -189,3 +196,10 @@ window.onclick = function(event) {
 function viewMessages(senderEmail) {
     alert(`Would show detailed message list for ${senderEmail}`);
 }
+
+/*
+ * ES MODULE EXPORTS
+ * Export UI-related functions so main.js can use them
+ * These handle displaying data and managing user interface elements
+ */
+export { displaySenders, showMoveConfirmation, showRuleConfirmation, confirmAction, closeModal, showStatus, selectAllSenders, deselectAllSenders, updateBulkButtons, bulkAction, viewMessages };

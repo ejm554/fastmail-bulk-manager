@@ -1,4 +1,13 @@
 /*
+ * ES MODULE IMPORTS
+ * main.js is the entry point that ties everything together
+ * It imports the classes and functions it needs from other modules
+ * This creates a clear dependency tree: main.js depends on these other files
+ */
+import { FastmailBulkManager } from './fastmail-api.js';
+import { displaySenders } from './ui.js';
+
+/*
  * INITIALIZATION AND FORM HANDLING
  * This file initializes the app and handles the configuration form
  */

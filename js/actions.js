@@ -1,4 +1,13 @@
 /*
+ * ES MODULE IMPORT
+ * Import statements tell JavaScript which code from other files we need
+ * We're importing the FastmailBulkManager class from fastmail-api.js
+ * The '.js' extension is required for ES modules
+ * This creates a dependency: actions.js needs fastmail-api.js to work
+ */
+import { FastmailBulkManager } from './fastmail-api.js';
+
+/*
  * ACTION EXECUTION FUNCTIONS
  * These functions handle the actual execution of user actions
  * (moving messages, creating rules) with preview mode support
@@ -62,7 +71,21 @@ async function executeBulkMove(senderEmails) {
             totalErrors++;
         }
     }
-
+    
     const successCount = results.filter(r => r.result.success).length;
     showStatus(`Bulk move completed: ${successCount}/${senderEmails.length} senders processed, ${totalMoved} messages moved${totalErrors > 0 ? ` (${totalErrors} errors)` : ''}`, 
-              successCount === senderEmails.length ?
+              successCount === senderEmails.length ? 'success' : 'warning');
+
+    // Refresh the display
+    const daysPast = parseInt(document.getElementById('daysPast').value);
+    await scanMessages(daysPast);
+}
+
+/*
+ * ES MODULE EXPORT
+ * Export statements make functions available to other files
+ * This allows main.js to use these action functions
+ * Named exports (in curly braces) let us export multiple items at once
+ * Other files will import these by name to use them
+ */
+export { executeMove, executeRule, executeBulkMove };
