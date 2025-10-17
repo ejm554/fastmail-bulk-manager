@@ -1,0 +1,135 @@
+From e3fe26816473130d615730e641d6951bb397dee2 Mon Sep 17 00:00:00 2001
+From: EJ Makela <ejm.git@ejm.fea.st>
+Date: Fri, 17 Oct 2025 18:52:51 +0000
+Subject: [PATCH] Migrate authentication from Basic to Bearer tokens
+
+- Update JMAP endpoint to api.fastmail.com/jmap/session (already done)
+- Remove username field from form
+- Change password field to API Token with updated help text
+- Update FastmailBulkManager.connect() to use Bearer authentication
+- Store apiToken in class instance for use in all JMAP calls
+- Update makeJMAPCall() to use Bearer token instead of Basic auth
+- Update main.js form handler to use apiToken field
+
+This fixes the CORS authentication issue and enables the tool to work
+with Fastmail's API token system. Implemented with assistance from
+Claude Desktop (claude.ai) on 2025-10-17 in conversation "Fastmail
+Toolkit (Part 3)" (ID: b946c48c-f049-421c-8d97-12b526b517f1). Claude
+committed and pushed these changes directly to GitHub.
+---
+ index.html         | 10 +++-------
+ js/fastmail-api.js | 19 ++++++++++---------
+ js/main.js         |  5 ++---
+ 3 files changed, 15 insertions(+), 19 deletions(-)
+
+diff --git a/index.html b/index.html
+index 50d9a79..ecc01e0 100644
+--- a/index.html
++++ b/index.html
+@@ -68,13 +68,9 @@
+                 <input type="text" id="server" value="https://api.fastmail.com/jmap/session" readonly>
+             </div>
+             <div class="form-group">
+-                <label for="username">Username (email):</label>
+-                <input type="email" id="username" required>
+-            </div>
+-            <div class="form-group">
+-                <label for="password">App Password:</label>
+-                <input type="password" id="password" required>
+-                <small>Generate an app password in Fastmail Settings → Privacy & Security → App Passwords</small>
++                <label for="apiToken">API Token:</label>
++                <input type="password" id="apiToken" required>
++                <small>Generate an API token in Fastmail Settings → Privacy & Security → API tokens. Required scopes: JMAP Core, JMAP Mail, JMAP Submission</small>
+             </div>
+             <div class="form-group">
+ 
+diff --git a/js/fastmail-api.js b/js/fastmail-api.js
+index 1a79aa9..ede3902 100644
+--- a/js/fastmail-api.js
++++ b/js/fastmail-api.js
+@@ -14,14 +14,15 @@ class FastmailBulkManager {
+         this.accountId = null;    // User's account identifier
+         this.bulkFolderId = null; // ID of the bulk/spam folder
+         this.baseUrl = null;      // Base URL for JMAP API calls
++        this.apiToken = null;     // API token for Bearer authentication
+     }
+ 
+     /*
+      * AUTHENTICATION METHOD
+      * Async/await syntax for handling asynchronous operations
+-     * This connects to Fastmail's JMAP API using app passwords
++     * This connects to Fastmail's JMAP API using Bearer token authentication
+      */
+-    async connect(server, username, password) {
++    async connect(server, apiToken) {
+         try {
+             /*
+              * FETCH API
+@@ -32,11 +33,11 @@ class FastmailBulkManager {
+                 method: 'GET',
+                 headers: {
+                     /*
+-                     * HTTP BASIC AUTHENTICATION
+-                     * btoa() encodes username:password in Base64
+-                     * This is how we authenticate with Fastmail's API
++                     * HTTP BEARER TOKEN AUTHENTICATION
++                     * Bearer tokens are the required authentication method for
++                     * Fastmail's CORS-enabled JMAP endpoint
+                      */
+-                    'Authorization': `Basic ${btoa(username + ':' + password)}`
++                    'Authorization': `Bearer ${apiToken}`
+                 }
+             });
+ 
+@@ -52,6 +53,7 @@ class FastmailBulkManager {
+              */
+             this.session = await sessionResponse.json();
+             this.baseUrl = this.session.apiUrl;
++            this.apiToken = apiToken; // Store for use in subsequent JMAP calls
+             
+             /*
+              * OBJECT PROPERTY ACCESS
+@@ -66,7 +68,7 @@ class FastmailBulkManager {
+              * This supports the extensibility roadmap
+              */
+             window.FastmailToolkit.setSharedAuth({
+-                server, username, password,
++                server, apiToken,
+                 session: this.session,
+                 baseUrl: this.baseUrl,
+                 accountId: this.accountId
+@@ -330,8 +332,7 @@ if address :is "from" "${senderEmail}" {
+             method: 'POST',
+             headers: {
+                 'Content-Type': 'application/json',
+-                'Authorization': document.getElementById('password').value ? 
+-                    `Basic ${btoa(document.getElementById('username').value + ':' + document.getElementById('password').value)}` : ''
++                'Authorization': `Bearer ${this.apiToken}`
+             },
+             body: JSON.stringify({
+                 using: ['urn:ietf:params:jmap:core', 'urn:ietf:params:jmap:mail'],
+diff --git a/js/main.js b/js/main.js
+index 710b181..ede5589 100644
+--- a/js/main.js
++++ b/js/main.js
+@@ -22,8 +22,7 @@ document.getElementById('configForm').addEventListener('submit', async (e) => {
+     e.preventDefault();
+     
+     const server = document.getElementById('server').value;
+-    const username = document.getElementById('username').value;
+-    const password = document.getElementById('password').value;
++    const apiToken = document.getElementById('apiToken').value;
+     const subscriptionsFolder = document.getElementById('subscriptionsFolder').value;
+     const daysPast = parseInt(document.getElementById('daysPast').value);
+     isPreviewMode = document.getElementById('previewMode').checked;
+@@ -33,7 +32,7 @@ document.getElementById('configForm').addEventListener('submit', async (e) => {
+     
+     try {
+         // Connect to JMAP
+-        const connectResult = await manager.connect(server, username, password);
++        const connectResult = await manager.connect(server, apiToken);
+         if (!connectResult.success) {
+             throw new Error(connectResult.error);
+         }
+-- 
+2.43.0
