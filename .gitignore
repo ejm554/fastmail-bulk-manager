@@ -1,5 +1,21 @@
+# .gitignore - Files and directories Git should ignore
+# Lines starting with # are comments
+# Each pattern tells Git not to track certain files
+
+# Project-specific documentation (personal notes, not for public repo)
 docs/conversation-notes/
+
+# Continue.dev AI assistant cache (user-specific)
 .continue
+
+# VS Code editor settings (user-specific)
 .vscode
+
+# macOS folder metadata (system file)
 .DS_Store
+
+# Third-party packages installed via npm (can be reinstalled)
 node_modules/
+
+# Bundled production files from 'npm run build' (can be rebuilt)
+dist/
