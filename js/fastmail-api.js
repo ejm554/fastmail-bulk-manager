@@ -143,7 +143,7 @@ class FastmailBulkManager {
             ]);
 
             const emails = response[1][1].list;
-            return this.groupBySender(emails);
+            return { success: true, senderCounts: this.groupBySender(emails) };
         } catch (error) {
             throw error;
         }
