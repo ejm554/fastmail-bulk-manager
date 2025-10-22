@@ -97,15 +97,10 @@ class FastmailBulkManager {
 
             const mailboxes = response[0][1].list;
             
-            // First try to find by role
-            let bulkFolder = mailboxes.find(mb => mb.role === 'junk');
-            
-            // If not found, try by name (case insensitive)
-            if (!bulkFolder) {
-                bulkFolder = mailboxes.find(mb => 
-                    mb.name.toLowerCase() === folderName.toLowerCase()
-                );
-            }
+            // Find folder by name (case insensitive)
+            let bulkFolder = mailboxes.find(mb => 
+                mb.name.toLowerCase() === folderName.toLowerCase()
+            );
 
             if (bulkFolder) {
                 this.bulkFolderId = bulkFolder.id;
