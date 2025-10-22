@@ -57,6 +57,7 @@ document.getElementById('configForm').addEventListener('submit', async (e) => {
         }
         
     } catch (error) {
+        console.error('Full error details:', error);
         statusDiv.innerHTML = `<div class="status error">Error: ${error.message}</div>`;
     }
 });
