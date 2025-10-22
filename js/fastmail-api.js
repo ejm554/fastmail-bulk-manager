@@ -43,6 +43,8 @@ class FastmailBulkManager {
 
             // Check if the HTTP request was successful
             if (!sessionResponse.ok) {
+                const errorBody = await sessionResponse.text();
+                console.error('Auth failed. Status:', sessionResponse.status, 'Body:', errorBody);
                 throw new Error(`Authentication failed: ${sessionResponse.status}`);
             }
 
