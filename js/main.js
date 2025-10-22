@@ -47,7 +47,14 @@ document.getElementById('configForm').addEventListener('submit', async (e) => {
         
         // Show results section and scan messages
         document.getElementById('results').classList.remove('hidden');
-        await scanMessages(daysPast);
+        
+        // Call manager's scanBulkMessages method
+        const scanResult = await manager.scanBulkMessages(daysPast);
+        if (scanResult.success) {
+            displaySenders(scanResult.senderCounts, isPreviewMode);
+        } else {
+            throw new Error(scanResult.error);
+        }
         
     } catch (error) {
         statusDiv.innerHTML = `<div class="status error">Error: ${error.message}</div>`;
